@@ -2,7 +2,7 @@ name: AzureDeploy
 env:
   subscriptionId: 'e00c66ed-91e7-48ec-977d-d246ddab413a'
   bicepFile: './main.bicep'
-  armtemplateFile: './main.json'
+  armTemplateFile: './main.json'
 
 on:
   push:

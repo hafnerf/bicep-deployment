@@ -23,7 +23,7 @@ jobs:
       - name: Bicep Build
         uses: aliencube/bicep-build-actions@v0.1
         with:
-          files: ${bicepFile}
+          files: ${{ env.bicepFile }}
       
       #create artifact tar
       - name: 'Tar files'
@@ -60,5 +60,5 @@ jobs:
         uses: Azure/arm-deploy@v1
         with:
           resourceGroupName: bicep
-          subscriptionId: ${subscriptionId}
-          template: ${armTemplateFile}
+          subscriptionId: ${{ env.subscriptionId }}
+          template: ${{ env.armTemplateFile }}

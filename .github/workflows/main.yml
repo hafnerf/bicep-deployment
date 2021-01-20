@@ -23,7 +23,7 @@ jobs:
       - name: Bicep Build
         uses: aliencube/bicep-build-actions@v0.1
         with:
-          files: $bicepFile
+          files: ${{bicepFile}}
       
       #create artifact tar
       - name: 'Tar files'
@@ -53,12 +53,12 @@ jobs:
       # Login to Azure
       - uses: azure/login@v1
         with:
-          creds: $AZURE_CREDENTIALS
+          creds: ${{AZURE_CREDENTIALS}}
 
       # Deploy compiled ARM Template
       - name: Deploy Azure Resource Manager (ARM) Template
         uses: Azure/arm-deploy@v1
         with:
           resourceGroupName: bicep
-          subscriptionId: $subscriptionId
-          template: $armTemplateFile
+          subscriptionId: ${{subscriptionId}}
+          template: ${{armTemplateFile}}

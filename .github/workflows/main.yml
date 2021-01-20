@@ -1,0 +1,64 @@
+name: AzureDeploy
+env:
+  subscriptionId: 'e00c66ed-91e7-48ec-977d-d246ddab413a'
+  bicepFile: './main.bicep'
+  armtemplateFile: './main.json'
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+     
+      - name: Bicep Build
+        uses: aliencube/bicep-build-actions@v0.1
+        with:
+          files: '$'
+      
+      #create artifact tar
+      - name: 'Tar files'
+        run: tar -cvf bicep-artifacts.tar ./
+
+      #upload artifacts
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: bicep-artifacts
+          path: bicep-artifacts.tar
+      
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      # download & exract build artifacts
+      - uses: actions/download-artifact@v2
+        with:
+          name: bicep-artifacts
+      
+      # Extract files from build tar
+      - name: 'Extraxt Files'
+        run: tar -xvf bicep-artifacts.tar
+      
+      # Login to Azure
+      - uses: azure/login@v1
+        with:
+          creds: $
+
+      # Deploy compiled ARM Template
+      - name: Deploy Azure Resource Manager (ARM) Template
+        uses: Azure/arm-deploy@v1
+        with:
+          resourceGroupName: bicep
+          subscriptionId: $
+          template: '$'
